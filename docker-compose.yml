@@ -1,0 +1,35 @@
+services:
+  dankmuzikk-ytdl:
+    container_name: "dankmuzikk-ytdl"
+    build:
+      dockerfile: Dockerfile
+    restart: "always"
+    ports:
+      - "4321:4321"
+    stdin_open: true
+    env_file:
+      - .env.docker
+    volumes:
+      - ytdl-files:/app/.serve
+      - ytdl-chrome-data:/app/google-chrome-data/
+    networks:
+      - danktwork
+
+networks:
+  danktwork:
+    external: true
+
+volumes:
+  ytdl-files:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./.serve
+
+  ytdl-chrome-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./.google-chrome-data
