@@ -9,8 +9,9 @@ if DOWNLOAD_PATH is None or DOWNLOAD_PATH == "":
     print("Missing BLOBS_DIR suka")
     exit(1)
 
-MUZIKKX_DIR = f"{DOWNLOAD_PATH}/muzikkx/"
-PIX_DIR = f"{DOWNLOAD_PATH}/pix/"
+MUZIKKX_DIR = f"{DOWNLOAD_PATH}/muzikkx"
+PIX_DIR = f"{DOWNLOAD_PATH}/pix"
+CHROME_DATA = os.environ.get("CHROME_DATA")
 
 YT_ERROR = {
     0: "none",
@@ -19,20 +20,22 @@ YT_ERROR = {
     3: "other youtube error",
 }
 
-def download_yt_song(id: str) -> int:
+
+def download_yt_song(id: str, audio_format: str = "mp3") -> int:
     try:
         ytdl = YoutubeDL({
-            "cookiesfrombrowser": ("chrome", "/app/google-chrome-data/"),
+            "cookiesfrombrowser": ("chrome", CHROME_DATA),
             "remote_components": ["ejs:npm"],
             "js_runtimes": {"node": {}},
-            "format": "251,140,249,250,233,234,139,bestaudio/best",
+            "format": "bestaudio/best",
             "postprocessors": [{
                 "key": "FFmpegExtractAudio",
-                "preferredcodec": "mp3",
-                "preferredquality": "192",
+                "preferredcodec": audio_format,
             }],
             "writethumbnail": True,
-            "outtmpl": f"{MUZIKKX_DIR}/%(id)s.%(ext)s"
+            "outtmpl": f"{MUZIKKX_DIR}/%(id)s.%(ext)s",
+            "concurrent_fragment_downloads": 2,
+            "no_overwrites": True,
         })
         ytdl.download("https://www.youtube.com/watch?v=" + id)
     except:
@@ -56,12 +59,15 @@ def download_yt_song(id: str) -> int:
 
 app = Flask(__name__)
 
+
 @app.route("/download/<id>")
 def handle_download_song(id):
     res = download_yt_song(id)
     if res != 0:
         return {"error": YT_ERROR[res]}
     return {"msg": "woohoo"}
+
+
 
 
 def close_server(arg1, arg2):
