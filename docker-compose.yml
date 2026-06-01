@@ -11,7 +11,7 @@ services:
       - .env.docker
     volumes:
       - ytdl-files:/app/.serve
-      - ytdl-chrome-data:/app/google-chrome-data/
+      - ytdl-chrome-data:/app/.google-chrome-data/
     networks:
       - danktwork
 
@@ -32,4 +32,4 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./.google-chrome-data
+      device: ./.google-chrome-data/
