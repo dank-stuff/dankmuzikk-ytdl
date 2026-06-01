@@ -60,6 +60,7 @@ def download_yt_song(id: str, audio_format: str = "mp3") -> int:
 app = Flask(__name__)
 
 
+# deprecated endpoint used by legacy DankMuzikk
 @app.route("/download/<id>")
 def handle_download_song(id):
     res = download_yt_song(id)
@@ -68,6 +69,52 @@ def handle_download_song(id):
     return {"msg": "woohoo"}
 
 
+@app.route("/download/flac/<id>")
+def handle_download_song_flac(id):
+    res = download_yt_song(id, "flac")
+    if res != 0:
+        return {"error": YT_ERROR[res]}
+    return {"msg": "woohoo"}
+
+
+@app.route("/download/mp3/<id>")
+def handle_download_song_mp3(id):
+    res = download_yt_song(id, "mp3")
+    if res != 0:
+        return {"error": YT_ERROR[res]}
+    return {"msg": "woohoo"}
+
+
+@app.route("/download/ogg/<id>")
+def handle_download_song_ogg(id):
+    res = download_yt_song(id, "vorbis")
+    if res != 0:
+        return {"error": YT_ERROR[res]}
+    return {"msg": "woohoo"}
+
+
+@app.route("/download/opus/<id>")
+def handle_download_song_opus(id):
+    res = download_yt_song(id, "opus")
+    if res != 0:
+        return {"error": YT_ERROR[res]}
+    return {"msg": "woohoo"}
+
+
+@app.route("/download/aac/<id>")
+def handle_download_song_aac(id):
+    res = download_yt_song(id, "aac")
+    if res != 0:
+        return {"error": YT_ERROR[res]}
+    return {"msg": "woohoo"}
+
+
+@app.route("/download/wav/<id>")
+def handle_download_song_wav(id):
+    res = download_yt_song(id, "wav")
+    if res != 0:
+        return {"error": YT_ERROR[res]}
+    return {"msg": "woohoo"}
 
 
 def close_server(arg1, arg2):
